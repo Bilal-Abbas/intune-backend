@@ -1,4 +1,4 @@
-# Email Queue Backend
+# Backend
 
 A robust email queuing system built with Node.js, Redis, BullMQ, and Supabase authentication. This backend service handles email delivery with retry logic, rate limiting, and comprehensive logging.
 
