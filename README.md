@@ -14,7 +14,7 @@ A robust email queuing system built with Node.js, Redis, BullMQ, and Supabase au
 
 ## Tech Stack
 
-- **Runtime**: Node.js 18+ with TypeScript
+- **Runtime**: Node.js 21+ with TypeScript
 - **Framework**: Express.js
 - **Queue**: BullMQ with Redis
 - **Authentication**: Supabase Auth
@@ -23,28 +23,26 @@ A robust email queuing system built with Node.js, Redis, BullMQ, and Supabase au
 - **Logging**: Winston
 - **Validation**: Joi
 - **Security**: Helmet, CORS, Rate Limiting
+- **Deployment**: Docker, Elastic Beanstalk, ECR
 
 ## Prerequisites
 
-- Node.js 18+ 
-- Redis server
+- Node.js 21+
+- Docker and Docker Compose
 - Supabase project
 - Resend API key
+- AWS account (for production deployment)
 
-## Installation
+## Quick Start
 
-1. **Clone the repository**
+### Local Development
+
+1. **Clone and navigate to backend**
    ```bash
-   git clone <repository-url>
    cd backend
    ```
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
+2. **Set up environment variables**
    ```bash
    cp .env.example .env
    ```
@@ -69,41 +67,55 @@ A robust email queuing system built with Node.js, Redis, BullMQ, and Supabase au
    # Resend Configuration
    RESEND_API_KEY=your_resend_api_key
    
-   # Security
-   JWT_SECRET=your_jwt_secret
-   RATE_LIMIT_WINDOW_MS=900000
-   RATE_LIMIT_MAX_REQUESTS=100
-   
    # Email Configuration
    FROM_EMAIL=Intune <noreply@app.intune.bio>
    EMAIL_RETRY_ATTEMPTS=3
    EMAIL_RETRY_DELAY=5000
+   
+   # Rate Limiting
+   RATE_LIMIT_WINDOW_MS=900000
+   RATE_LIMIT_MAX_REQUESTS=100
    ```
 
-4. **Start Redis server**
+3. **Start with Docker Compose (Recommended)**
    ```bash
-   # Using Docker (Recommended)
+   # Development environment
+   docker-compose up --build
+   
+   # Or run in background
+   docker-compose up -d --build
+   ```
+
+4. **Alternative: Local development**
+   ```bash
+   # Install dependencies
+   npm install
+   
+   # Start Redis (if not using Docker)
    docker run -d -p 6379:6379 redis:7-alpine
    
-   # Or using Docker Compose (includes Redis Commander)
-   docker compose up redis redis-commander
-   
-   # Or install Redis locally
-   # Follow Redis installation guide for your OS
+   # Start development server
+   npm run dev
    ```
 
-5. **Build and run**
-   ```bash
-   # Development
-   npm run dev
-   
-   # Production
-   npm run build
-   npm start
-   
-   # Using Docker (Full stack)
-   docker compose up --build
-   ```
+## Docker Setup
+
+### Development Environment
+```bash
+# Start all services (backend + Redis + Redis Commander)
+docker-compose up
+
+# Access services:
+# - Backend API: http://localhost:3001
+# - Redis Commander: http://localhost:8081
+# - Redis: localhost:6379
+```
+
+### Production Testing
+```bash
+# Test with production ECR image locally
+docker-compose -f docker-compose.prod.yml up
+```
 
 ## API Endpoints
 
