@@ -1,4 +1,4 @@
-import winston from 'winston';
+import winston from "winston";
 
 const logFormat = winston.format.combine(
   winston.format.timestamp(),
@@ -7,21 +7,22 @@ const logFormat = winston.format.combine(
 );
 
 export const logger = winston.createLogger({
-  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+  level: process.env.NODE_ENV === "production" ? "info" : "debug",
   format: logFormat,
-  defaultMeta: { service: 'email-queue-backend' },
+  defaultMeta: { service: "email-queue-backend" },
   transports: [
-    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'logs/combined.log' }),
+    new winston.transports.File({ filename: "logs/error.log", level: "error" }),
+    new winston.transports.File({ filename: "logs/combined.log" }),
   ],
 });
 
 // If we're not in production, log to the console as well
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
+
+logger.add(
+  new winston.transports.Console({
     format: winston.format.combine(
       winston.format.colorize(),
       winston.format.simple()
-    )
-  }));
-} 
+    ),
+  })
+);

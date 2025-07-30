@@ -19,9 +19,10 @@ app.use(helmet());
 
 // CORS configuration
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://app.intune.bio', 'https://intune.bio', 'http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000']
-    : ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000'],
+  origin: '*',
+  // origin: process.env.NODE_ENV === 'production' 
+  //   ? ['https://app.intune.bio', 'https://intune.bio']
+  //   : ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
