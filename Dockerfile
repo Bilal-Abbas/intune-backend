@@ -1,10 +1,10 @@
-FROM node:21-alpine
+FROM node:21-bullseye
 
 # Set working directory
 WORKDIR /app
 
 # Install dependencies for node-gyp (if needed)
-RUN apk add --no-cache python3 make g++
+RUN apt-get update && apt-get install -y python3 make g++ nano
 
 # Copy package files
 COPY package*.json ./
@@ -22,8 +22,7 @@ RUN npm run build
 RUN mkdir -p logs
 
 # Create non-root user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nodejs -u 1001
+RUN groupadd -g 1001 nodejs && useradd -u 1001 -g nodejs -s /bin/bash -m nodejs
 
 # Change ownership of the app directory
 RUN chown -R nodejs:nodejs /app
@@ -37,4 +36,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3001/api/email/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
 
 # Start the application
-CMD ["node", "dist/index.js"] 
+CMD ["node", "dist/index.js"]

@@ -30,9 +30,11 @@ export const authenticateToken = async (
     const { data: { user }, error } = await supabaseAuth.auth.getUser(token);
 
     if (error || !user) {
+      console.error('Auth middleware error:', error);
       return res.status(401).json({ 
         error: 'Invalid token',
-        message: 'The provided authentication token is invalid or expired'
+        message: 'The provided authentication token is invalid or expired',
+        details: error?.message || 'Unknown error' // Include actual error
       });
     }
 
