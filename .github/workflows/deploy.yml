@@ -1,0 +1,53 @@
+name: Build and Deploy to EB
+
+on:
+  push:
+    branches: [main]
+    paths: ['backend/**']
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }} #us-east-1
+  # ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }} #intbio-backend
+  EB_ENVIRONMENT: ${{ secrets.EB_ENVIRONMENT }} #production  # Change this to your EB environment name
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # - name: Build, tag, and push image to Amazon ECR
+      #   id: build-image
+      #   env:
+      #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+      #     IMAGE_TAG: ${{ github.sha }}
+      #   run: |
+      #     cd backend
+      #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+      #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+      #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+      #     echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Install EB CLI
+        run: pip install awsebcli
+
+      - name: Deploy to Elastic Beanstalk
+        run: |
+          cd backend
+          eb deploy ${{ env.EB_ENVIRONMENT }} 
