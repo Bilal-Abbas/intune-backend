@@ -57,9 +57,42 @@ jobs:
       - name: Deploy to Elastic Beanstalk
         env:
           EB_ENVIRONMENT: ${{ secrets.EB_ENVIRONMENT }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
           echo "Current directory: $(pwd)"
           echo "Listing contents:"
           ls -la
           echo "EB Environment: $EB_ENVIRONMENT"
+          echo "AWS Region: $AWS_REGION"
+          
+          # Create .elasticbeanstalk/config.yml for non-interactive deployment
+          mkdir -p .elasticbeanstalk
+          cat > .elasticbeanstalk/config.yml << EOF
+          branch-defaults:
+            main:
+              environment: $EB_ENVIRONMENT
+          environment-defaults:
+            backend:
+              branch: null
+              repository: null
+          global:
+            application_name: IntBio
+            branch: null
+            default_ec2_keyname: intbio-backend
+            default_platform: Docker
+            default_region: $AWS_REGION
+            include_git_submodules: true
+            instance_profile: null
+            platform_name: null
+            platform_version: null
+            profile: null
+            repository: null
+            sc: git
+            workspace_type: Application
+          EOF
+          
+          echo "EB configuration created"
+          cat .elasticbeanstalk/config.yml
+          
+          echo "Deploying to EB..."
           eb deploy $EB_ENVIRONMENT 
