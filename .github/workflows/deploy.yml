@@ -61,14 +61,5 @@ jobs:
           echo "Current directory: $(pwd)"
           echo "Listing contents:"
           ls -la
-          echo "Checking if backend directory exists:"
-          if [ -d "backend" ]; then
-            echo "Backend directory found"
-            cd backend
-            echo "Inside backend directory: $(pwd)"
-            echo "EB Environment: $EB_ENVIRONMENT"
-            eb deploy $EB_ENVIRONMENT
-          else
-            echo "Backend directory not found!"
-            exit 1
-          fi 
+          echo "EB Environment: $EB_ENVIRONMENT"
+          eb deploy $EB_ENVIRONMENT 
