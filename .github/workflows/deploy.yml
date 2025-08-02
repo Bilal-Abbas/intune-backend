@@ -58,13 +58,11 @@ jobs:
         env:
           EB_ENVIRONMENT: ${{ secrets.EB_ENVIRONMENT }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
+          APPLICATION_NAME: ${{ secrets.APPLICATION_NAME }}
+          EC2_KEYNAME: ${{ secrets.EC2_KEYNAME }}
+          PLATFORM: ${{ secrets.PLATFORM }}
+          WORKSPACE_TYPE: ${{ secrets.WORKSPACE_TYPE }}
         run: |
-          echo "Current directory: $(pwd)"
-          echo "Listing contents:"
-          ls -la
-          echo "EB Environment: $EB_ENVIRONMENT"
-          echo "AWS Region: $AWS_REGION"
-          
           # Create .elasticbeanstalk/config.yml for non-interactive deployment
           mkdir -p .elasticbeanstalk
           cat > .elasticbeanstalk/config.yml << EOF
@@ -76,10 +74,10 @@ jobs:
               branch: null
               repository: null
           global:
-            application_name: IntBio
+            application_name: $APPLICATION_NAME
             branch: null
-            default_ec2_keyname: intbio-backend
-            default_platform: Docker
+            default_ec2_keyname: $EC2_KEYNAME
+            default_platform: $PLATFORM
             default_region: $AWS_REGION
             include_git_submodules: true
             instance_profile: null
@@ -88,7 +86,7 @@ jobs:
             profile: null
             repository: null
             sc: git
-            workspace_type: Application
+            workspace_type: $WORKSPACE_TYPE
           EOF
           
           echo "EB configuration created"
