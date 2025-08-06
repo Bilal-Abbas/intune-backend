@@ -21,7 +21,8 @@ export enum EmailContext {
   SIGNUP_CONFIRMATION = "signup_confirmation",
   STUDY_CREATED = "study_created",
   FACILITY_CREATED = "facility_created",
-  PROPOSAL_STATUS_UPDATED = "proposal_status_updated"
+  PROPOSAL_STATUS_UPDATED = "proposal_status_updated",
+  STUDY_PUBLISHED = "study_published",
 }
 
 export interface EmailJobResult {
@@ -64,4 +65,4 @@ export interface EmailNotification {
   sentAt?: Date;
   createdAt: Date;
   updatedAt: Date;
-} 
+}
