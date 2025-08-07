@@ -3,7 +3,8 @@ name: Build and Deploy to EB
 on:
   push:
     branches: [main]
-    paths: ['backend/**', '.github/workflows/**']
+    # Remove the paths filter to trigger on all changes
+    # paths: ['backend/**', '.github/workflows/**']
 
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }} #us-east-1
