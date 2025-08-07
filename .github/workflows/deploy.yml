@@ -7,6 +7,7 @@ on:
 
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }} #us-east-1
+  AWS_SES_REGION: ${{ secrets.AWS_SES_REGION || 'us-east-1' }}
   # ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }} #intbio-backend
   EB_ENVIRONMENT: ${{ secrets.EB_ENVIRONMENT }} #production  # Change this to your EB environment name
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -26,10 +27,12 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+          aws-ses-region: ${{ secrets.AWS_SES_REGION || 'us-east-1' }}
 
       - name: Debug AWS credentials
         run: |
           echo "AWS_REGION: $AWS_REGION"
+          echo "AWS_SES_REGION: $AWS_SES_REGION"
           echo "AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:0:10}..."
           echo "AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:0:10}..."
           aws sts get-caller-identity
@@ -62,6 +65,9 @@ jobs:
           EC2_KEYNAME: ${{ secrets.EC2_KEYNAME }}
           PLATFORM: ${{ secrets.PLATFORM }}
           WORKSPACE_TYPE: ${{ secrets.WORKSPACE_TYPE }}
+          AWS_SES_REGION: ${{ secrets.AWS_SES_REGION || 'us-east-1' }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           # Create .elasticbeanstalk/config.yml for non-interactive deployment
           mkdir -p .elasticbeanstalk

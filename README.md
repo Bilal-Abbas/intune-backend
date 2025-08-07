@@ -18,7 +18,7 @@ A robust email queuing system built with Node.js, Redis, BullMQ, and Supabase au
 - **Framework**: Express.js
 - **Queue**: BullMQ with Redis
 - **Authentication**: Supabase Auth
-- **Email Service**: Resend
+- **Email Service**: AWS SES (Simple Email Service)
 - **Database**: Supabase (PostgreSQL)
 - **Logging**: Winston
 - **Validation**: Joi
@@ -30,7 +30,7 @@ A robust email queuing system built with Node.js, Redis, BullMQ, and Supabase au
 - Node.js 21+
 - Docker and Docker Compose
 - Supabase project
-- Resend API key
+- AWS account with SES configured
 - AWS account (for production deployment)
 
 ## Quick Start
@@ -64,11 +64,13 @@ A robust email queuing system built with Node.js, Redis, BullMQ, and Supabase au
    SUPABASE_ANON_KEY=your_supabase_anon_key
    SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
    
-   # Resend Configuration
-   RESEND_API_KEY=your_resend_api_key
+   # AWS SES Configuration
+   AWS_SES_REGION=us-east-1
+   AWS_ACCESS_KEY_ID=your_aws_access_key_id
+   AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
    
    # Email Configuration
-   FROM_EMAIL=Intune <noreply@app.intune.bio>
+   FROM_EMAIL=noreply@app.intune.bio
    EMAIL_RETRY_ATTEMPTS=3
    EMAIL_RETRY_DELAY=5000
    
@@ -269,8 +271,10 @@ Logs are stored in the `logs/` directory:
 | `SUPABASE_URL` | Supabase URL | - |
 | `SUPABASE_ANON_KEY` | Supabase anon key | - |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service key | - |
-| `RESEND_API_KEY` | Resend API key | - |
-| `FROM_EMAIL` | Default from email | Intune <noreply@app.intune.bio> |
+| `AWS_REGION` | AWS Region | us-east-1 |
+| `AWS_ACCESS_KEY_ID` | AWS Access Key ID | - |
+| `AWS_SECRET_ACCESS_KEY` | AWS Secret Access Key | - |
+| `FROM_EMAIL` | Default from email | noreply@app.intune.bio |
 | `EMAIL_RETRY_ATTEMPTS` | Max retry attempts | 3 |
 | `EMAIL_RETRY_DELAY` | Retry delay (ms) | 5000 |
 | `RATE_LIMIT_WINDOW_MS` | Rate limit window | 900000 |
