@@ -15,7 +15,7 @@ export const sendEmail = async (emailJob: EmailJob): Promise<void> => {
 
     logger.info(`Sending email via SES to: ${to}, subject: ${subject}`);
 
-    // In development with placeholder credentials, just log the email
+    // In development with placeholder credentials, just log the email gracefully
     if (
       !process.env.AWS_ACCESS_KEY_ID ||
       process.env.AWS_ACCESS_KEY_ID === "placeholder"
