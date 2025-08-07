@@ -1,4 +1,5 @@
-FROM node:21-bullseye
+# Build stage
+FROM node:21-bullseye AS builder
 
 # Set working directory
 WORKDIR /app
@@ -9,14 +10,27 @@ RUN apt-get update && apt-get install -y python3 make g++ nano
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
+# Install all dependencies (including dev dependencies for build)
 RUN npm ci
 
 # Copy source code
 COPY . .
 
-# Build the application
-RUN npm run build
+# Build the application with increased memory limit
+RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build
+
+# Production stage
+FROM node:21-bullseye
+
+# Set working directory
+WORKDIR /app
+
+# Install only production dependencies
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Copy built application from builder stage
+COPY --from=builder /app/dist ./dist
 
 # Create logs directory
 RUN mkdir -p logs
