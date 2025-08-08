@@ -12,6 +12,20 @@ export interface EmailJob {
   attempts?: number;
 }
 
+// New interface for template-based email jobs
+export interface TemplateEmailJob {
+  id: string;
+  to: string;
+  userId: string;
+  organizationId?: string;
+  referenceId?: string;
+  context: EmailContext;
+  templateData: Record<string, any>;
+  priority?: number;
+  delay?: number;
+  attempts?: number;
+}
+
 export enum EmailContext {
   MESSAGE_RECEIVED = "message_received",
   PROPOSAL_RECEIVED = "proposal_received",
