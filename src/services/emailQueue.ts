@@ -116,7 +116,7 @@ const logEmailNotification = async (
       .from('email_notifications')
       .insert({
         user_id: emailJob.userId,
-        organization_id: emailJob.organizationId || null,
+        org_id: emailJob.organizationId || null,
         reference_id: emailJob.referenceId || null,
         to_email: emailJob.to,
         context: emailJob.context,
