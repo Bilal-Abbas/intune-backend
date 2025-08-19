@@ -1,18 +1,30 @@
 import { EmailContext } from "../types";
-import { 
-  getMessageReceivedEmailHTML, 
+import {
+  MessageReceivedTemplateData,
+  getMessageReceivedEmailHTML,
   getMessageReceivedEmailSubject,
-  MessageReceivedTemplateData 
 } from "../templates/message_received";
-import { 
-  getStudyPublishedEmailHTML, 
+import {
+  StudyPublishedTemplateData,
+  getStudyPublishedEmailHTML,
   getStudyPublishedEmailSubject,
-  StudyPublishedTemplateData 
 } from "../templates/study_published";
+import {
+  FacilityCreatedTemplateData,
+  getFacilityCreatedEmailHTML,
+  getFacilityCreatedEmailSubject,
+} from "../templates/facility_created";
+import {
+  ProposalReceivedTemplateData,
+  getProposalReceivedEmailHTML,
+  getProposalReceivedEmailSubject,
+} from "../templates/proposal_received";
 
-export interface TemplateData {
-  [key: string]: any;
-}
+export type TemplateData =
+  | MessageReceivedTemplateData
+  | StudyPublishedTemplateData
+  | FacilityCreatedTemplateData
+  | ProposalReceivedTemplateData;
 
 export interface RenderedEmail {
   subject: string;
@@ -24,26 +36,56 @@ export class TemplateService {
     switch (context) {
       case EmailContext.MESSAGE_RECEIVED:
         return this.renderMessageReceived(data as MessageReceivedTemplateData);
-      
+
       case EmailContext.STUDY_PUBLISHED:
         return this.renderStudyPublished(data as StudyPublishedTemplateData);
-      
+
+      case EmailContext.FACILITY_CREATED:
+        return this.renderFacilityCreated(data as FacilityCreatedTemplateData);
+
+      case EmailContext.PROPOSAL_RECEIVED:
+        return this.renderProposalReceived(
+          data as ProposalReceivedTemplateData
+        );
+
       default:
         throw new Error(`No template found for context: ${context}`);
     }
   }
 
-  private static renderMessageReceived(data: MessageReceivedTemplateData): RenderedEmail {
+  private static renderMessageReceived(
+    data: MessageReceivedTemplateData
+  ): RenderedEmail {
     return {
       subject: getMessageReceivedEmailSubject(data),
-      html: getMessageReceivedEmailHTML(data)
+      html: getMessageReceivedEmailHTML(data),
     };
   }
 
-  private static renderStudyPublished(data: StudyPublishedTemplateData): RenderedEmail {
+  private static renderStudyPublished(
+    data: StudyPublishedTemplateData
+  ): RenderedEmail {
     return {
       subject: getStudyPublishedEmailSubject(data),
-      html: getStudyPublishedEmailHTML(data)
+      html: getStudyPublishedEmailHTML(data),
     };
   }
-} 
+
+  private static renderFacilityCreated(
+    data: FacilityCreatedTemplateData
+  ): RenderedEmail {
+    return {
+      subject: getFacilityCreatedEmailSubject(data),
+      html: getFacilityCreatedEmailHTML(data),
+    };
+  }
+
+  private static renderProposalReceived(
+    data: ProposalReceivedTemplateData
+  ): RenderedEmail {
+    return {
+      subject: getProposalReceivedEmailSubject(data),
+      html: getProposalReceivedEmailHTML(data),
+    };
+  }
+}
