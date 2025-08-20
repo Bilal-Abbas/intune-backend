@@ -19,12 +19,24 @@ import {
   getProposalReceivedEmailHTML,
   getProposalReceivedEmailSubject,
 } from "../templates/proposal_received";
+import {
+  InvitationSentTemplateData,
+  getInvitationSentEmailHTML,
+  getInvitationSentEmailSubject,
+} from "../templates/invitation_sent";
+import {
+  SiteArchivedTemplateData,
+  getSiteArchivedEmailHTML,
+  getSiteArchivedEmailSubject,
+} from "../templates/site_archived";
 
 export type TemplateData =
   | MessageReceivedTemplateData
   | StudyPublishedTemplateData
   | SiteCreatedTemplateData
-  | ProposalReceivedTemplateData;
+  | ProposalReceivedTemplateData
+  | InvitationSentTemplateData
+  | SiteArchivedTemplateData;
 
 export interface RenderedEmail {
   subject: string;
@@ -47,6 +59,12 @@ export class TemplateService {
         return this.renderProposalReceived(
           data as ProposalReceivedTemplateData
         );
+
+      case EmailContext.INVITATION_SENT:
+        return this.renderInvitationSent(data as InvitationSentTemplateData);
+
+      case EmailContext.SITE_ARCHIVED:
+        return this.renderSiteArchived(data as SiteArchivedTemplateData);
 
       default:
         throw new Error(`No template found for context: ${context}`);
@@ -86,6 +104,24 @@ export class TemplateService {
     return {
       subject: getProposalReceivedEmailSubject(data),
       html: getProposalReceivedEmailHTML(data),
+    };
+  }
+
+  private static renderInvitationSent(
+    data: InvitationSentTemplateData
+  ): RenderedEmail {
+    return {
+      subject: getInvitationSentEmailSubject(data),
+      html: getInvitationSentEmailHTML(data),
+    };
+  }
+
+  private static renderSiteArchived(
+    data: SiteArchivedTemplateData
+  ): RenderedEmail {
+    return {
+      subject: getSiteArchivedEmailSubject(data),
+      html: getSiteArchivedEmailHTML(data),
     };
   }
 }

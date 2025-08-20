@@ -37,6 +37,7 @@ export enum EmailContext {
   SITE_CREATED = "site_created",
   PROPOSAL_STATUS_UPDATED = "proposal_status_updated",
   STUDY_PUBLISHED = "study_published",
+  SITE_ARCHIVED = "site_archived",
 }
 
 export interface EmailJobResult {
