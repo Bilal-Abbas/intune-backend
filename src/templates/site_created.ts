@@ -1,12 +1,12 @@
-export interface FacilityCreatedTemplateData {
+export interface SiteCreatedTemplateData {
   siteName: string;
   siteLink: string;
   siteOrgName?: string;
   siteDescription?: string;
 }
 
-export function getFacilityCreatedEmailHTML(
-  data: FacilityCreatedTemplateData
+export function getSiteCreatedEmailHTML(
+  data: SiteCreatedTemplateData
 ): string {
   const { siteName, siteLink, siteOrgName, siteDescription } = data;
 
@@ -52,8 +52,8 @@ export function getFacilityCreatedEmailHTML(
   `;
 }
 
-export function getFacilityCreatedEmailSubject(
-  data: FacilityCreatedTemplateData
+export function getSiteCreatedEmailSubject(
+  data: SiteCreatedTemplateData
 ): string {
   return `Site Published: ${data.siteName}`;
 }

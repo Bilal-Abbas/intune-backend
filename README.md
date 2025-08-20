@@ -187,7 +187,7 @@ The system supports the following email contexts:
 - `file_uploaded` - File upload notifications
 - `signup_confirmation` - Signup confirmations
 - `study_created` - Study creation notifications
-- `facility_created` - Facility creation notifications
+- `site_created` - Site creation notifications
 - `proposal_status_updated` - Proposal status change notifications
 
 ## Integration with Frontend

@@ -10,10 +10,10 @@ import {
   getStudyPublishedEmailSubject,
 } from "../templates/study_published";
 import {
-  FacilityCreatedTemplateData,
-  getFacilityCreatedEmailHTML,
-  getFacilityCreatedEmailSubject,
-} from "../templates/facility_created";
+  SiteCreatedTemplateData,
+  getSiteCreatedEmailHTML,
+  getSiteCreatedEmailSubject,
+} from "../templates/site_created";
 import {
   ProposalReceivedTemplateData,
   getProposalReceivedEmailHTML,
@@ -23,7 +23,7 @@ import {
 export type TemplateData =
   | MessageReceivedTemplateData
   | StudyPublishedTemplateData
-  | FacilityCreatedTemplateData
+  | SiteCreatedTemplateData
   | ProposalReceivedTemplateData;
 
 export interface RenderedEmail {
@@ -40,8 +40,8 @@ export class TemplateService {
       case EmailContext.STUDY_PUBLISHED:
         return this.renderStudyPublished(data as StudyPublishedTemplateData);
 
-      case EmailContext.FACILITY_CREATED:
-        return this.renderFacilityCreated(data as FacilityCreatedTemplateData);
+      case EmailContext.SITE_CREATED:
+        return this.renderSiteCreated(data as SiteCreatedTemplateData);
 
       case EmailContext.PROPOSAL_RECEIVED:
         return this.renderProposalReceived(
@@ -71,12 +71,12 @@ export class TemplateService {
     };
   }
 
-  private static renderFacilityCreated(
-    data: FacilityCreatedTemplateData
+  private static renderSiteCreated(
+    data: SiteCreatedTemplateData
   ): RenderedEmail {
     return {
-      subject: getFacilityCreatedEmailSubject(data),
-      html: getFacilityCreatedEmailHTML(data),
+      subject: getSiteCreatedEmailSubject(data),
+      html: getSiteCreatedEmailHTML(data),
     };
   }
 

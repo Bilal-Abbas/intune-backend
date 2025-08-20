@@ -34,7 +34,7 @@ export enum EmailContext {
   FILE_UPLOADED = "file_uploaded",
   SIGNUP_CONFIRMATION = "signup_confirmation",
   STUDY_CREATED = "study_created",
-  FACILITY_CREATED = "facility_created",
+  SITE_CREATED = "site_created",
   PROPOSAL_STATUS_UPDATED = "proposal_status_updated",
   STUDY_PUBLISHED = "study_published",
 }
