@@ -29,6 +29,21 @@ import {
   getSiteArchivedEmailHTML,
   getSiteArchivedEmailSubject,
 } from "../templates/site_archived";
+import {
+  SiteMatchedTemplateData,
+  getSiteMatchedEmailHTML,
+  getSiteMatchedEmailSubject,
+} from "../templates/site_matched";
+import {
+  FeasibilityConfirmedTemplateData,
+  getFeasibilityConfirmedEmailHTML,
+  getFeasibilityConfirmedEmailSubject,
+} from "../templates/feasibility_confirmed";
+import {
+  SiteShortlistedTemplateData,
+  getSiteShortlistedEmailHTML,
+  getSiteShortlistedEmailSubject,
+} from "../templates/site_shortlisted";
 
 export type TemplateData =
   | MessageReceivedTemplateData
@@ -36,7 +51,10 @@ export type TemplateData =
   | SiteCreatedTemplateData
   | ProposalReceivedTemplateData
   | InvitationSentTemplateData
-  | SiteArchivedTemplateData;
+  | SiteArchivedTemplateData
+  | SiteMatchedTemplateData
+  | FeasibilityConfirmedTemplateData
+  | SiteShortlistedTemplateData;
 
 export interface RenderedEmail {
   subject: string;
@@ -65,6 +83,15 @@ export class TemplateService {
 
       case EmailContext.SITE_ARCHIVED:
         return this.renderSiteArchived(data as SiteArchivedTemplateData);
+
+      case EmailContext.SITE_MATCHED:
+        return this.renderSiteMatched(data as SiteMatchedTemplateData);
+
+      case EmailContext.FEASIBILITY_CONFIRMED:
+        return this.renderFeasibilityConfirmed(data as FeasibilityConfirmedTemplateData);
+
+      case EmailContext.SITE_SHORTLISTED:
+        return this.renderSiteShortlisted(data as SiteShortlistedTemplateData);
 
       default:
         throw new Error(`No template found for context: ${context}`);
@@ -122,6 +149,33 @@ export class TemplateService {
     return {
       subject: getSiteArchivedEmailSubject(data),
       html: getSiteArchivedEmailHTML(data),
+    };
+  }
+
+  private static renderSiteMatched(
+    data: SiteMatchedTemplateData
+  ): RenderedEmail {
+    return {
+      subject: getSiteMatchedEmailSubject(data),
+      html: getSiteMatchedEmailHTML(data),
+    };
+  }
+
+  private static renderFeasibilityConfirmed(
+    data: FeasibilityConfirmedTemplateData
+  ): RenderedEmail {
+    return {
+      subject: getFeasibilityConfirmedEmailSubject(data),
+      html: getFeasibilityConfirmedEmailHTML(data),
+    };
+  }
+
+  private static renderSiteShortlisted(
+    data: SiteShortlistedTemplateData
+  ): RenderedEmail {
+    return {
+      subject: getSiteShortlistedEmailSubject(data),
+      html: getSiteShortlistedEmailHTML(data),
     };
   }
 }

@@ -38,6 +38,9 @@ export enum EmailContext {
   PROPOSAL_STATUS_UPDATED = "proposal_status_updated",
   STUDY_PUBLISHED = "study_published",
   SITE_ARCHIVED = "site_archived",
+  SITE_MATCHED = "site_matched",
+  FEASIBILITY_CONFIRMED = "feasibility_confirmed",
+  SITE_SHORTLISTED = "site_shortlisted",
 }
 
 export interface EmailJobResult {
