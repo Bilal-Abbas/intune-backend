@@ -44,6 +44,16 @@ import {
   getSiteShortlistedEmailHTML,
   getSiteShortlistedEmailSubject,
 } from "../templates/site_shortlisted";
+import {
+  SiteSelectedTemplateData,
+  getSiteSelectedEmailHTML,
+  getSiteSelectedEmailSubject,
+} from "../templates/site_selected";
+import {
+  SiteArchivedBySponsorTemplateData,
+  getSiteArchivedBySponsorEmailHTML,
+  getSiteArchivedBySponsorEmailSubject,
+} from "../templates/site_archived_by_sponsor";
 
 export type TemplateData =
   | MessageReceivedTemplateData
@@ -54,7 +64,9 @@ export type TemplateData =
   | SiteArchivedTemplateData
   | SiteMatchedTemplateData
   | FeasibilityConfirmedTemplateData
-  | SiteShortlistedTemplateData;
+  | SiteShortlistedTemplateData
+  | SiteSelectedTemplateData
+  | SiteArchivedBySponsorTemplateData;
 
 export interface RenderedEmail {
   subject: string;
@@ -78,20 +90,26 @@ export class TemplateService {
           data as ProposalReceivedTemplateData
         );
 
-      case EmailContext.INVITATION_SENT:
+      case EmailContext.INVITATION_SENT_BY_SPONSOR:
         return this.renderInvitationSent(data as InvitationSentTemplateData);
 
-      case EmailContext.SITE_ARCHIVED:
+      case EmailContext.SITE_ARCHIVED_BY_SITE:
         return this.renderSiteArchived(data as SiteArchivedTemplateData);
 
-      case EmailContext.SITE_MATCHED:
+      case EmailContext.SITE_MATCHED_BY_SPONSOR:
         return this.renderSiteMatched(data as SiteMatchedTemplateData);
 
-      case EmailContext.FEASIBILITY_CONFIRMED:
+      case EmailContext.FEASIBILITY_CONFIRMED_BY_SPONSOR:
         return this.renderFeasibilityConfirmed(data as FeasibilityConfirmedTemplateData);
 
-      case EmailContext.SITE_SHORTLISTED:
+      case EmailContext.SITE_SHORTLISTED_BY_SPONSOR:
         return this.renderSiteShortlisted(data as SiteShortlistedTemplateData);
+
+      case EmailContext.SITE_SELECTED_BY_SPONSOR:
+        return this.renderSiteSelected(data as SiteSelectedTemplateData);
+
+      case EmailContext.SITE_ARCHIVED_BY_SPONSOR:
+        return this.renderSiteArchivedBySponsor(data as SiteArchivedBySponsorTemplateData);
 
       default:
         throw new Error(`No template found for context: ${context}`);
@@ -176,6 +194,24 @@ export class TemplateService {
     return {
       subject: getSiteShortlistedEmailSubject(data),
       html: getSiteShortlistedEmailHTML(data),
+    };
+  }
+
+  private static renderSiteSelected(
+    data: SiteSelectedTemplateData
+  ): RenderedEmail {
+    return {
+      subject: getSiteSelectedEmailSubject(data),
+      html: getSiteSelectedEmailHTML(data),
+    };
+  }
+
+  private static renderSiteArchivedBySponsor(
+    data: SiteArchivedBySponsorTemplateData
+  ): RenderedEmail {
+    return {
+      subject: getSiteArchivedBySponsorEmailSubject(data),
+      html: getSiteArchivedBySponsorEmailHTML(data),
     };
   }
 }

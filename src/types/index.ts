@@ -29,18 +29,20 @@ export interface TemplateEmailJob {
 export enum EmailContext {
   MESSAGE_RECEIVED = "message_received",
   PROPOSAL_RECEIVED = "proposal_received",
-  SITE_RECRUITED = "site_recruited",
-  INVITATION_SENT = "invitation_sent",
+  SITE_RECRUITED_BY_SPONSOR = "site_recruited_by_sponsor",
   FILE_UPLOADED = "file_uploaded",
   SIGNUP_CONFIRMATION = "signup_confirmation",
   STUDY_CREATED = "study_created",
   SITE_CREATED = "site_created",
   PROPOSAL_STATUS_UPDATED = "proposal_status_updated",
   STUDY_PUBLISHED = "study_published",
-  SITE_ARCHIVED = "site_archived",
-  SITE_MATCHED = "site_matched",
-  FEASIBILITY_CONFIRMED = "feasibility_confirmed",
-  SITE_SHORTLISTED = "site_shortlisted",
+  SITE_ARCHIVED_BY_SITE = "site_archived_by_site",
+  SITE_MATCHED_BY_SPONSOR = "site_matched_by_sponsor",
+  INVITATION_SENT_BY_SPONSOR = "invitation_sent_by_sponsor",
+  FEASIBILITY_CONFIRMED_BY_SPONSOR = "feasibility_confirmed_by_sponsor",
+  SITE_SHORTLISTED_BY_SPONSOR = "site_shortlisted_by_sponsor",
+  SITE_SELECTED_BY_SPONSOR = "site_selected_by_sponsor",
+  SITE_ARCHIVED_BY_SPONSOR = "site_archived_by_sponsor",
 }
 
 export interface EmailJobResult {
