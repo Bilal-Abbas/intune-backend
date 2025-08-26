@@ -148,6 +148,26 @@ Content-Type: application/json
 }
 ```
 
+#### Queue Template Email
+```http
+POST /api/email/queue/template
+Content-Type: application/json
+
+{
+  "to": "recipient@example.com",
+  "userId": "user-uuid",
+  "organizationId": "org-uuid",
+  "referenceId": "reference-uuid",
+  "context": "site_matched_by_sponsor",
+  "templateData": {
+    "sponsorName": "Acme Pharmaceuticals",
+    "studyTitle": "Phase III Clinical Trial",
+    "siteContactName": "Dr. Sarah Johnson",
+    "studyLink": "https://app.intune.bio/study/123"
+  }
+}
+```
+
 #### Queue Batch Emails
 ```http
 POST /api/email/queue/batch
@@ -161,6 +181,30 @@ Content-Type: application/json
       "context": "message_received",
       "subject": "New Message",
       "html": "<h1>Hello World</h1>"
+    }
+  ]
+}
+```
+
+#### Queue Batch Template Emails
+```http
+POST /api/email/queue/batch/template
+Content-Type: application/json
+
+{
+  "emails": [
+    {
+      "to": "recipient1@example.com",
+      "userId": "user-uuid",
+      "organizationId": "org-uuid",
+      "referenceId": "reference-uuid",
+      "context": "site_matched_by_sponsor",
+      "templateData": {
+        "sponsorName": "Acme Pharmaceuticals",
+        "studyTitle": "Phase III Clinical Trial",
+        "siteContactName": "Dr. Sarah Johnson",
+        "studyLink": "https://app.intune.bio/study/123"
+      }
     }
   ]
 }
@@ -180,15 +224,130 @@ GET /api/email/health
 
 The system supports the following email contexts:
 
+### Core Communication
 - `message_received` - New message notifications
 - `proposal_received` - Proposal notifications
-- `site_recruited` - Site recruitment notifications
-- `invitation_sent` - Invitation notifications
 - `file_uploaded` - File upload notifications
 - `signup_confirmation` - Signup confirmations
+
+### Study Management
 - `study_created` - Study creation notifications
+- `study_published` - Study published notifications
 - `site_created` - Site creation notifications
+
+### Site-Sponsor Interaction Lifecycle
+- `invitation_sent_by_sponsor` - When sponsor invites site to submit proposal
+- `site_matched_by_sponsor` - When sponsor moves site to matched status
+- `feasibility_confirmed_by_sponsor` - When sponsor confirms site feasibility
+- `site_shortlisted_by_sponsor` - When sponsor moves site to shortlisted status
+- `site_selected_by_sponsor` - When sponsor officially selects site for participation
+- `site_recruited_by_sponsor` - Site recruitment notifications
+
+### Status Changes
+- `site_archived_by_site` - When site moves study to archive (site-initiated)
+- `site_archived_by_sponsor` - When sponsor moves site to archive (sponsor-initiated)
 - `proposal_status_updated` - Proposal status change notifications
+
+### Direct Messaging
+- `sponsor_message_to_site` - When sponsor sends message to site
+- `site_message_to_sponsor` - When site sends message to sponsor
+
+## Email Template System
+
+The backend includes a comprehensive template system with the following features:
+
+### Template Structure
+Each email template includes:
+- **HTML Template**: Responsive, branded email design
+- **Subject Line**: Dynamic subject generation
+- **TypeScript Interface**: Type-safe template data
+- **Conditional Rendering**: Optional content based on data
+
+### Available Templates
+
+#### Status Change Templates
+1. **Site Matched** (`site_matched_by_sponsor`)
+   - Notifies sites when moved to matched status
+   - Includes sponsor message and next steps
+
+2. **Feasibility Confirmed** (`feasibility_confirmed_by_sponsor`)
+   - Confirms site feasibility assessment
+   - Provides next steps for site activation
+
+3. **Site Shortlisted** (`site_shortlisted_by_sponsor`)
+   - Announces shortlisting for final selection
+   - Encourages proposal submission
+
+4. **Site Selected** (`site_selected_by_sponsor`)
+   - Official selection notification
+   - Details about contract and activation steps
+
+5. **Site Archived** (`site_archived_by_site`, `site_archived_by_sponsor`)
+   - Notifies about study archiving
+   - Explains reasons and next steps
+
+#### Communication Templates
+6. **Invitation Sent** (`invitation_sent_by_sponsor`)
+   - Invites sites to submit proposals
+   - Includes sponsor message and study details
+
+7. **Sponsor Message to Site** (`sponsor_message_to_site`)
+   - Direct communication from sponsor
+   - Includes message content and document notifications
+
+8. **Site Message to Sponsor** (`site_message_to_sponsor`)
+   - Direct communication from site
+   - Includes message content and status information
+
+### Template Testing
+
+All templates can be tested using the email queue endpoints:
+
+```bash
+# Test single template email
+curl -X POST http://localhost:3001/api/email/queue/template \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -d '{
+    "to": "recipient@example.com",
+    "userId": "user-uuid",
+    "organizationId": "org-uuid",
+    "referenceId": "reference-uuid",
+    "context": "site_matched_by_sponsor",
+    "templateData": {
+      "sponsorName": "Acme Pharmaceuticals",
+      "studyTitle": "Phase III Clinical Trial",
+      "siteContactName": "Dr. Sarah Johnson",
+      "studyLink": "https://app.intune.bio/study/123"
+    }
+  }'
+```
+
+### Template Data Structure
+
+Each template expects specific data fields:
+
+```typescript
+// Example: Site Matched Template
+interface SiteMatchedTemplateData {
+  sponsorName: string;
+  studyTitle: string;
+  siteContactName: string;
+  studyLink: string;
+}
+
+// Example: Sponsor Message Template
+interface SponsorMessageToSiteTemplateData {
+  sponsorName: string;
+  studyTitle: string;
+  siteContactName: string;
+  sponsorContactName: string;
+  sponsorMessage: string;
+  currentSiteStatus: string;
+  studyLink: string;
+  hasDocument: boolean;
+}
+```
 
 ## Integration with Frontend
 
@@ -321,7 +480,22 @@ src/
 │   └── email.ts     # Email queue routes
 ├── services/        # Business logic
 │   ├── emailQueue.ts # BullMQ queue service
-│   └── emailService.ts # Email sending service
+│   ├── emailService.ts # Email sending service
+│   └── templateService.ts # Email template rendering service
+├── templates/       # Email templates
+│   ├── message_received.ts # Message received template
+│   ├── study_published.ts # Study published template
+│   ├── site_created.ts # Site created template
+│   ├── proposal_received.ts # Proposal received template
+│   ├── invitation_sent.ts # Invitation sent template
+│   ├── site_archived.ts # Site archived template
+│   ├── site_matched.ts # Site matched template
+│   ├── feasibility_confirmed.ts # Feasibility confirmed template
+│   ├── site_shortlisted.ts # Site shortlisted template
+│   ├── site_selected.ts # Site selected template
+│   ├── site_archived_by_sponsor.ts # Site archived by sponsor template
+│   ├── sponsor_message_to_site.ts # Sponsor message to site template
+│   └── site_message_to_sponsor.ts # Site message to sponsor template
 ├── types/           # TypeScript types
 │   └── index.ts     # Type definitions
 ├── utils/           # Utilities
