@@ -43,6 +43,8 @@ export enum EmailContext {
   SITE_SHORTLISTED_BY_SPONSOR = "site_shortlisted_by_sponsor",
   SITE_SELECTED_BY_SPONSOR = "site_selected_by_sponsor",
   SITE_ARCHIVED_BY_SPONSOR = "site_archived_by_sponsor",
+  SPONSOR_MESSAGE_TO_SITE = "sponsor_message_to_site",
+  SITE_MESSAGE_TO_SPONSOR = "site_message_to_sponsor",
 }
 
 export interface EmailJobResult {

@@ -54,6 +54,16 @@ import {
   getSiteArchivedBySponsorEmailHTML,
   getSiteArchivedBySponsorEmailSubject,
 } from "../templates/site_archived_by_sponsor";
+import {
+  SponsorMessageToSiteTemplateData,
+  getSponsorMessageToSiteEmailHTML,
+  getSponsorMessageToSiteEmailSubject,
+} from "../templates/sponsor_message_to_site";
+import {
+  SiteMessageToSponsorTemplateData,
+  getSiteMessageToSponsorEmailHTML,
+  getSiteMessageToSponsorEmailSubject,
+} from "../templates/site_message_to_sponsor";
 
 export type TemplateData =
   | MessageReceivedTemplateData
@@ -66,7 +76,9 @@ export type TemplateData =
   | FeasibilityConfirmedTemplateData
   | SiteShortlistedTemplateData
   | SiteSelectedTemplateData
-  | SiteArchivedBySponsorTemplateData;
+  | SiteArchivedBySponsorTemplateData
+  | SponsorMessageToSiteTemplateData
+  | SiteMessageToSponsorTemplateData;
 
 export interface RenderedEmail {
   subject: string;
@@ -110,6 +122,12 @@ export class TemplateService {
 
       case EmailContext.SITE_ARCHIVED_BY_SPONSOR:
         return this.renderSiteArchivedBySponsor(data as SiteArchivedBySponsorTemplateData);
+
+      case EmailContext.SPONSOR_MESSAGE_TO_SITE:
+        return this.renderSponsorMessageToSite(data as SponsorMessageToSiteTemplateData);
+
+      case EmailContext.SITE_MESSAGE_TO_SPONSOR:
+        return this.renderSiteMessageToSponsor(data as SiteMessageToSponsorTemplateData);
 
       default:
         throw new Error(`No template found for context: ${context}`);
@@ -212,6 +230,24 @@ export class TemplateService {
     return {
       subject: getSiteArchivedBySponsorEmailSubject(data),
       html: getSiteArchivedBySponsorEmailHTML(data),
+    };
+  }
+
+  private static renderSponsorMessageToSite(
+    data: SponsorMessageToSiteTemplateData
+  ): RenderedEmail {
+    return {
+      subject: getSponsorMessageToSiteEmailSubject(data),
+      html: getSponsorMessageToSiteEmailHTML(data),
+    };
+  }
+
+  private static renderSiteMessageToSponsor(
+    data: SiteMessageToSponsorTemplateData
+  ): RenderedEmail {
+    return {
+      subject: getSiteMessageToSponsorEmailSubject(data),
+      html: getSiteMessageToSponsorEmailHTML(data),
     };
   }
 }
