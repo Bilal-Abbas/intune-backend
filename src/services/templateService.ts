@@ -64,6 +64,16 @@ import {
   getSiteMessageToSponsorEmailHTML,
   getSiteMessageToSponsorEmailSubject,
 } from "../templates/site_message_to_sponsor";
+import {
+  SponsorWelcomeTemplateData,
+  getSponsorWelcomeEmailHTML,
+  getSponsorWelcomeEmailSubject,
+} from "../templates/sponsor_welcome";
+import {
+  SiteWelcomeTemplateData,
+  getSiteWelcomeEmailHTML,
+  getSiteWelcomeEmailSubject,
+} from "../templates/site_welcome";
 
 export type TemplateData =
   | MessageReceivedTemplateData
@@ -78,7 +88,9 @@ export type TemplateData =
   | SiteSelectedTemplateData
   | SiteArchivedBySponsorTemplateData
   | SponsorMessageToSiteTemplateData
-  | SiteMessageToSponsorTemplateData;
+  | SiteMessageToSponsorTemplateData
+  | SponsorWelcomeTemplateData
+  | SiteWelcomeTemplateData;
 
 export interface RenderedEmail {
   subject: string;
@@ -128,6 +140,12 @@ export class TemplateService {
 
       case EmailContext.SITE_MESSAGE_TO_SPONSOR:
         return this.renderSiteMessageToSponsor(data as SiteMessageToSponsorTemplateData);
+
+      case EmailContext.SPONSOR_WELCOME:
+        return this.renderSponsorWelcome(data as SponsorWelcomeTemplateData);
+
+      case EmailContext.SITE_WELCOME:
+        return this.renderSiteWelcome(data as SiteWelcomeTemplateData);
 
       default:
         throw new Error(`No template found for context: ${context}`);
@@ -248,6 +266,24 @@ export class TemplateService {
     return {
       subject: getSiteMessageToSponsorEmailSubject(data),
       html: getSiteMessageToSponsorEmailHTML(data),
+    };
+  }
+
+  private static renderSponsorWelcome(
+    data: SponsorWelcomeTemplateData
+  ): RenderedEmail {
+    return {
+      subject: getSponsorWelcomeEmailSubject(data),
+      html: getSponsorWelcomeEmailHTML(data),
+    };
+  }
+
+  private static renderSiteWelcome(
+    data: SiteWelcomeTemplateData
+  ): RenderedEmail {
+    return {
+      subject: getSiteWelcomeEmailSubject(data),
+      html: getSiteWelcomeEmailHTML(data),
     };
   }
 }

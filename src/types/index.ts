@@ -45,6 +45,8 @@ export enum EmailContext {
   SITE_ARCHIVED_BY_SPONSOR = "site_archived_by_sponsor",
   SPONSOR_MESSAGE_TO_SITE = "sponsor_message_to_site",
   SITE_MESSAGE_TO_SPONSOR = "site_message_to_sponsor",
+  SPONSOR_WELCOME = "sponsor_welcome",
+  SITE_WELCOME = "site_welcome",
 }
 
 export interface EmailJobResult {
