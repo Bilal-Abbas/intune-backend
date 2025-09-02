@@ -14,6 +14,9 @@ import { redis } from './config/redis';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Add this before your routes to trust proxy headers
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet());
 

@@ -435,4 +435,8 @@ router.get("/health", (req: Request, res: Response) => {
   });
 });
 
+router.get('/whoami', (req, res) => {
+  res.json({ ip: req.ip, forwarded: req.headers['x-forwarded-for'] });
+});
+
 export default router;
