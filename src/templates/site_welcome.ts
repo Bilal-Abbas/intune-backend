@@ -1,5 +1,5 @@
 export interface SiteWelcomeTemplateData {
-  firstName: string;
+  siteName: string;
   dashboardLink: string;
   organizationName?: string;
 }
@@ -7,7 +7,7 @@ export interface SiteWelcomeTemplateData {
 export function getSiteWelcomeEmailHTML(
   data: SiteWelcomeTemplateData
 ): string {
-  const { firstName, dashboardLink, organizationName } = data;
+  const { siteName, dashboardLink, organizationName } = data;
 
   return `
     <div style="font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4;">
@@ -19,7 +19,7 @@ export function getSiteWelcomeEmailHTML(
         </h2>
         
         <p style="font-size: 16px; margin-bottom: 24px; text-align: left;">
-          ${firstName},
+          ${siteName},
         </p>
         
         <p style="font-size: 16px; margin-bottom: 24px; text-align: left;">
