@@ -28,7 +28,7 @@ const corsOptions = {
   //   : ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Forwarded-For'],
   optionsSuccessStatus: 200
 };
 
