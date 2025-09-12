@@ -23,7 +23,7 @@ export const supabase = createClient(devSupabaseUrl, devSupabaseServiceKey, {
   }
 });
 
-export const supabaseAuth = createClient(devSupabaseUrl, devSupabaseAnonKey, {
+export const supabaseAuth = createClient(devSupabaseUrl, devSupabaseServiceKey, {
   auth: {
     autoRefreshToken: false,
     persistSession: false
