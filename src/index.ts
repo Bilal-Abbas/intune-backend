@@ -8,6 +8,7 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { logger } from './utils/logger';
 import emailRoutes from './routes/email';
+import notificationRoutes from './routes/notifications';
 import { emailWorker } from './services/emailQueue';
 import { redis } from './config/redis';
 
@@ -60,6 +61,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/api/email', emailRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
