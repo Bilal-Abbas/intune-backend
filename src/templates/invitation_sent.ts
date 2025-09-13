@@ -1,7 +1,7 @@
 export interface InvitationSentTemplateData {
   sponsorName: string;
   studyTitle: string;
-  siteContactName: string;
+  siteName: string;
   sponsorMessage: string;
   studyLink: string;
 }
@@ -12,7 +12,7 @@ export function getInvitationSentEmailHTML(
   const {
     sponsorName,
     studyTitle,
-    siteContactName,
+    siteName,
     sponsorMessage,
     studyLink,
   } = data;
@@ -31,7 +31,7 @@ export function getInvitationSentEmailHTML(
         </p>
 
         <h3 style="font-size: 20px; color: #333; margin-bottom: 16px; font-weight: bold;">
-          "${studyTitle}"
+          ${studyTitle}
         </h3>
 
         <p style="font-size: 16px; margin-bottom: 24px;">

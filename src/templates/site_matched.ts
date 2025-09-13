@@ -1,7 +1,8 @@
 export interface SiteMatchedTemplateData {
   sponsorName: string;
   studyTitle: string;
-  siteContactName: string;
+  siteName: string;
+  sponsorMessage?: string;
   studyLink: string;
 }
 
@@ -11,7 +12,8 @@ export function getSiteMatchedEmailHTML(
   const {
     sponsorName,
     studyTitle,
-    siteContactName,
+    siteName,
+    sponsorMessage,
     studyLink,
   } = data;
 
@@ -25,12 +27,23 @@ export function getSiteMatchedEmailHTML(
         </h2>
         
         <p style="font-size: 16px; margin-bottom: 24px;">
-          <strong>${siteContactName}</strong>, (whole site team)
+          <strong>${siteName}</strong>, (whole site team)
         </p>
 
         <p style="font-size: 16px; margin-bottom: 24px; text-align: left;">
           The sponsor of the study <strong>"${studyTitle}"</strong> has moved your site to <strong>Matched</strong> status on the Intune platform. This means your site meets their key criteria, and they're interested in potentially working with you.
         </p>
+
+        ${
+          sponsorMessage
+            ? `<div style="background-color: #f8f9fa; padding: 16px; margin: 24px 0; border-radius: 8px; border-left: 4px solid #1515D9;">
+                <p style="font-size: 14px; color: #666; margin: 0; font-style: italic; text-align: left;">
+                  <strong>Message from the Sponsor:</strong><br />
+                  "${sponsorMessage}"
+                </p>
+              </div>`
+            : ""
+        }
 
         <div style="background-color: #f8f9fa; padding: 20px; margin: 24px 0; border-radius: 8px; text-align: left;">
           <h4 style="font-size: 16px; color: #1515D9; margin-bottom: 12px;">You can now:</h4>

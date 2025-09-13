@@ -1,7 +1,7 @@
 export interface SponsorMessageToSiteTemplateData {
   sponsorName: string;
   studyTitle: string;
-  siteContactName: string;
+  siteName: string;
   sponsorContactName: string;
   sponsorMessage: string;
   currentSiteStatus: string;
@@ -15,7 +15,7 @@ export function getSponsorMessageToSiteEmailHTML(
   const {
     sponsorName,
     studyTitle,
-    siteContactName,
+    siteName,
     sponsorContactName,
     sponsorMessage,
     currentSiteStatus,
@@ -33,7 +33,7 @@ export function getSponsorMessageToSiteEmailHTML(
         </h2>
         
         <p style="font-size: 16px; margin-bottom: 24px;">
-          <strong>${siteContactName}</strong>,
+          <strong>${siteName}</strong>,
         </p>
 
         <p style="font-size: 16px; margin-bottom: 24px; text-align: left;">

@@ -1,7 +1,7 @@
 export interface SiteArchivedBySponsorTemplateData {
   sponsorName: string;
   studyTitle: string;
-  siteContactName: string;
+  siteName: string;
   sponsorMessage: string;
   studyLink: string;
 }
@@ -12,7 +12,7 @@ export function getSiteArchivedBySponsorEmailHTML(
   const {
     sponsorName,
     studyTitle,
-    siteContactName,
+    siteName,
     sponsorMessage,
     studyLink,
   } = data;
@@ -27,7 +27,7 @@ export function getSiteArchivedBySponsorEmailHTML(
         </h2>
         
         <p style="font-size: 16px; margin-bottom: 24px;">
-          <strong>${siteContactName}</strong>,
+          <strong>${siteName}</strong>,
         </p>
 
         <p style="font-size: 16px; margin-bottom: 24px; text-align: left;">
