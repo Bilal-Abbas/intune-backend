@@ -1,16 +1,18 @@
 # Backend
 
-A robust email queuing system built with Node.js, Redis, BullMQ, and Supabase authentication. This backend service handles email delivery with retry logic, rate limiting, and comprehensive logging.
+A comprehensive backend system built with Node.js, Redis, BullMQ, and Supabase authentication. This service handles email delivery, push notifications, and real-time communication with retry logic, rate limiting, and comprehensive logging.
 
 ## Features
 
 - 🔐 **Supabase Authentication** - Secure JWT-based authentication
 - 📧 **Email Queuing** - Reliable email delivery with BullMQ and Redis
+- 🔔 **Push Notifications** - Real-time in-app notifications with database persistence
 - 🔄 **Retry Logic** - Automatic retry with exponential backoff
 - 📊 **Queue Monitoring** - Real-time queue status and metrics
 - 🛡️ **Security** - Rate limiting, CORS, and Helmet security headers
 - 📝 **Logging** - Comprehensive logging with Winston
 - 🚀 **Scalable** - Concurrent email processing with configurable workers
+- 📱 **Real-time Updates** - Database triggers for instant notification delivery
 
 ## Tech Stack
 
@@ -70,7 +72,7 @@ A robust email queuing system built with Node.js, Redis, BullMQ, and Supabase au
    AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
    
    # Email Configuration
-   FROM_EMAIL=noreply@app.intune.bio
+   FROM_EMAIL=noreply@yourdomain.com
    EMAIL_RETRY_ATTEMPTS=3
    EMAIL_RETRY_DELAY=5000
    
@@ -127,6 +129,67 @@ All endpoints require a valid Supabase JWT token in the Authorization header:
 Authorization: Bearer <your-supabase-jwt-token>
 ```
 
+### Push Notification Endpoints
+
+#### Create Notification
+```http
+POST /api/notifications
+Content-Type: application/json
+
+{
+  "userId": "user-uuid",
+  "organizationId": "org-uuid",
+  "context": "message_received",
+  "referenceId": "reference-uuid",
+  "message": "You have received a new message",
+  "metadata": {
+    "senderName": "John Doe",
+    "threadId": "thread-uuid"
+  }
+}
+```
+
+#### Create Bulk Notifications
+```http
+POST /api/notifications/bulk
+Content-Type: application/json
+
+{
+  "notifications": [
+    {
+      "userId": "user-uuid-1",
+      "context": "message_received",
+      "message": "You have received a new message"
+    },
+    {
+      "userId": "user-uuid-2",
+      "context": "proposal_received",
+      "message": "You have received a new proposal"
+    }
+  ]
+}
+```
+
+#### Get User Notifications
+```http
+GET /api/notifications/user/:userId?limit=50&offset=0
+```
+
+#### Get Unread Count
+```http
+GET /api/notifications/user/:userId/unread-count
+```
+
+#### Mark Notification as Read
+```http
+PUT /api/notifications/:notificationId/read
+```
+
+#### Mark All Notifications as Read
+```http
+PUT /api/notifications/user/:userId/read-all
+```
+
 ### Email Queue Endpoints
 
 #### Queue Single Email
@@ -163,7 +226,7 @@ Content-Type: application/json
     "sponsorName": "Acme Pharmaceuticals",
     "studyTitle": "Phase III Clinical Trial",
     "siteContactName": "Dr. Sarah Johnson",
-    "studyLink": "https://app.intune.bio/study/123"
+    "studyLink": "https://yourdomain.com/study/123"
   }
 }
 ```
@@ -203,7 +266,7 @@ Content-Type: application/json
         "sponsorName": "Acme Pharmaceuticals",
         "studyTitle": "Phase III Clinical Trial",
         "siteContactName": "Dr. Sarah Johnson",
-        "studyLink": "https://app.intune.bio/study/123"
+        "studyLink": "https://yourdomain.com/study/123"
       }
     }
   ]
@@ -220,9 +283,9 @@ GET /api/email/queue/status
 GET /api/email/health
 ```
 
-## Email Contexts
+## Notification Contexts
 
-The system supports the following email contexts:
+The system supports the following notification contexts for both email and push notifications:
 
 ### Core Communication
 - `message_received` - New message notifications
@@ -251,6 +314,12 @@ The system supports the following email contexts:
 ### Direct Messaging
 - `sponsor_message_to_site` - When sponsor sends message to site
 - `site_message_to_sponsor` - When site sends message to sponsor
+
+### System Notifications
+- `system_announcement` - System-wide announcements
+- `document_uploaded` - Document upload notifications
+- `proposal_accepted` - Proposal acceptance notifications
+- `proposal_rejected` - Proposal rejection notifications
 
 ## Email Template System
 
@@ -318,7 +387,7 @@ curl -X POST http://localhost:3001/api/email/queue/template \
       "sponsorName": "Acme Pharmaceuticals",
       "studyTitle": "Phase III Clinical Trial",
       "siteContactName": "Dr. Sarah Johnson",
-      "studyLink": "https://app.intune.bio/study/123"
+      "studyLink": "https://yourdomain.com/study/123"
     }
   }'
 ```
@@ -349,47 +418,32 @@ interface SponsorMessageToSiteTemplateData {
 }
 ```
 
-## Integration with Frontend
+## Push Notification System
 
-Update your frontend email sending function to use the queue backend:
+The backend includes a comprehensive push notification system that integrates with the frontend for real-time updates:
 
-```typescript
-// Old implementation
-export async function sendBatchEmailNotificationClient(emails: EmailJob[]) {
-  const res = await fetch("/api/notifications/email", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ emails }),
-  });
-  return res.json();
-}
+### Notification Features
+- **Real-time Delivery** - Notifications are stored in the database and trigger real-time updates
+- **Bulk Operations** - Create multiple notifications efficiently
+- **Read Status Tracking** - Track read/unread status for each notification
+- **Context-based Filtering** - Filter notifications by context and metadata
+- **Pagination Support** - Efficient loading of notification history
 
-// New implementation with queue backend
-export async function sendBatchEmailNotificationClient(emails: EmailJob[]) {
-  // Get the user's JWT token from Supabase
-  const { data: { session } } = await supabase.auth.getSession();
-  
-  if (!session?.access_token) {
-    throw new Error('No authentication token available');
-  }
+### Client Integration
 
-  const res = await fetch("http://localhost:3001/api/email/queue/batch", {
-    method: "POST",
-    headers: { 
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${session.access_token}`
-    },
-    body: JSON.stringify({ emails }),
-  });
-  
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.message || "Failed to queue emails");
-  }
-  
-  return res.json();
-}
-```
+The notification system is designed to work with any client that can:
+- Make HTTP requests to the API endpoints
+- Subscribe to Supabase real-time changes
+- Handle JWT authentication
+
+#### Real-time Updates
+Clients can subscribe to real-time notifications using Supabase's real-time features:
+- Subscribe to `notifications` table changes
+- Filter by `user_id` for user-specific notifications
+- Handle INSERT events for new notifications
+
+#### API Usage
+All endpoints require proper authentication and return structured JSON responses.
 
 ## Monitoring
 
@@ -433,7 +487,7 @@ Logs are stored in the `logs/` directory:
 | `AWS_REGION` | AWS Region | us-east-1 |
 | `AWS_ACCESS_KEY_ID` | AWS Access Key ID | - |
 | `AWS_SECRET_ACCESS_KEY` | AWS Secret Access Key | - |
-| `FROM_EMAIL` | Default from email | noreply@app.intune.bio |
+| `FROM_EMAIL` | Default from email | noreply@yourdomain.com |
 | `EMAIL_RETRY_ATTEMPTS` | Max retry attempts | 3 |
 | `EMAIL_RETRY_DELAY` | Retry delay (ms) | 5000 |
 | `RATE_LIMIT_WINDOW_MS` | Rate limit window | 900000 |
@@ -477,10 +531,13 @@ src/
 ├── middleware/      # Express middleware
 │   └── auth.ts      # Authentication middleware
 ├── routes/          # API routes
-│   └── email.ts     # Email queue routes
+│   ├── email.ts     # Email queue routes
+│   └── notifications.ts # Push notification routes
 ├── services/        # Business logic
 │   ├── emailQueue.ts # BullMQ queue service
 │   ├── emailService.ts # Email sending service
+│   ├── notificationService.ts # Push notification service
+│   ├── sesEmailService.ts # AWS SES email service
 │   └── templateService.ts # Email template rendering service
 ├── templates/       # Email templates
 │   ├── message_received.ts # Message received template
@@ -495,11 +552,14 @@ src/
 │   ├── site_selected.ts # Site selected template
 │   ├── site_archived_by_sponsor.ts # Site archived by sponsor template
 │   ├── sponsor_message_to_site.ts # Sponsor message to site template
-│   └── site_message_to_sponsor.ts # Site message to sponsor template
+│   ├── site_message_to_sponsor.ts # Site message to sponsor template
+│   ├── site_welcome.ts # Site welcome template
+│   └── sponsor_welcome.ts # Sponsor welcome template
 ├── types/           # TypeScript types
 │   └── index.ts     # Type definitions
 ├── utils/           # Utilities
-│   └── logger.ts    # Winston logger
+│   ├── logger.ts    # Winston logger
+│   └── notificationHelpers.ts # Notification helper functions
 └── index.ts         # Main application file
 ```
 
@@ -529,9 +589,9 @@ docker compose up -d --build
 
 1. Set up Redis (managed service or self-hosted)
 2. Configure Supabase project
-3. Set up Resend account
+3. Set up AWS SES account
 4. Deploy the application
-5. Update frontend to use the new queue backend
+5. Configure client applications to use the API endpoints
 
 ## Troubleshooting
 
@@ -548,7 +608,7 @@ docker compose up -d --build
    - Verify token is included in Authorization header
 
 3. **Email Delivery Failed**
-   - Verify Resend API key
+   - Verify AWS SES configuration
    - Check email content and recipient addresses
    - Review email service logs
 
@@ -558,7 +618,13 @@ docker compose up -d --build
    - Check logs for errors
    - Monitor queue status via API
 
-5. **TypeScript Compilation Errors**
+5. **Notification Delivery Issues**
+   - Check Supabase database connection
+   - Verify notification table exists and has proper permissions
+   - Ensure clients are subscribed to real-time changes
+   - Check notification service logs
+
+6. **TypeScript Compilation Errors**
    - Ensure all functions have proper return statements
    - Check for missing imports (e.g., crypto module)
    - Run `npm run build` to verify compilation
