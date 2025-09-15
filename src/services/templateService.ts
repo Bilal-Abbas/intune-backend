@@ -74,6 +74,16 @@ import {
   getSiteWelcomeEmailHTML,
   getSiteWelcomeEmailSubject,
 } from "../templates/site_welcome";
+import {
+  StudyArchivedBySiteTemplateData,
+  getStudyArchivedBySiteEmailHTML,
+  getStudyArchivedBySiteEmailSubject,
+} from "../templates/study_archived_by_site";
+import {
+  SendProposalBySiteTemplateData,
+  getSendProposalBySiteEmailHTML,
+  getSendProposalBySiteEmailSubject,
+} from "../templates/send_proposal_by_site";
 
 export type TemplateData =
   | MessageReceivedTemplateData
@@ -90,7 +100,9 @@ export type TemplateData =
   | SponsorMessageToSiteTemplateData
   | SiteMessageToSponsorTemplateData
   | SponsorWelcomeTemplateData
-  | SiteWelcomeTemplateData;
+  | SiteWelcomeTemplateData
+  | StudyArchivedBySiteTemplateData
+  | SendProposalBySiteTemplateData;
 
 export interface RenderedEmail {
   subject: string;
@@ -117,14 +129,19 @@ export class TemplateService {
       case EmailContext.INVITATION_SENT_BY_SPONSOR:
         return this.renderInvitationSent(data as InvitationSentTemplateData);
 
-      case EmailContext.SITE_ARCHIVED_BY_SITE:
-        return this.renderSiteArchived(data as SiteArchivedTemplateData);
+      case EmailContext.STUDY_ARCHIVED_BY_SITE:
+        return this.renderStudyArchivedBySite(data as StudyArchivedBySiteTemplateData);
+
+      case EmailContext.SEND_PROPOSAL_BY_SITE:
+        return this.renderSendProposalBySite(data as SendProposalBySiteTemplateData);
 
       case EmailContext.SITE_MATCHED_BY_SPONSOR:
         return this.renderSiteMatched(data as SiteMatchedTemplateData);
 
       case EmailContext.FEASIBILITY_CONFIRMED_BY_SPONSOR:
-        return this.renderFeasibilityConfirmed(data as FeasibilityConfirmedTemplateData);
+        return this.renderFeasibilityConfirmed(
+          data as FeasibilityConfirmedTemplateData
+        );
 
       case EmailContext.SITE_SHORTLISTED_BY_SPONSOR:
         return this.renderSiteShortlisted(data as SiteShortlistedTemplateData);
@@ -133,13 +150,19 @@ export class TemplateService {
         return this.renderSiteSelected(data as SiteSelectedTemplateData);
 
       case EmailContext.SITE_ARCHIVED_BY_SPONSOR:
-        return this.renderSiteArchivedBySponsor(data as SiteArchivedBySponsorTemplateData);
+        return this.renderSiteArchivedBySponsor(
+          data as SiteArchivedBySponsorTemplateData
+        );
 
       case EmailContext.SPONSOR_MESSAGE_TO_SITE:
-        return this.renderSponsorMessageToSite(data as SponsorMessageToSiteTemplateData);
+        return this.renderSponsorMessageToSite(
+          data as SponsorMessageToSiteTemplateData
+        );
 
       case EmailContext.SITE_MESSAGE_TO_SPONSOR:
-        return this.renderSiteMessageToSponsor(data as SiteMessageToSponsorTemplateData);
+        return this.renderSiteMessageToSponsor(
+          data as SiteMessageToSponsorTemplateData
+        );
 
       case EmailContext.SPONSOR_WELCOME:
         return this.renderSponsorWelcome(data as SponsorWelcomeTemplateData);
@@ -284,6 +307,24 @@ export class TemplateService {
     return {
       subject: getSiteWelcomeEmailSubject(data),
       html: getSiteWelcomeEmailHTML(data),
+    };
+  }
+
+  private static renderStudyArchivedBySite(
+    data: StudyArchivedBySiteTemplateData
+  ): RenderedEmail {
+    return {
+      subject: getStudyArchivedBySiteEmailSubject(data),
+      html: getStudyArchivedBySiteEmailHTML(data),
+    };
+  }
+
+  private static renderSendProposalBySite(
+    data: SendProposalBySiteTemplateData
+  ): RenderedEmail {
+    return {
+      subject: getSendProposalBySiteEmailSubject(data),
+      html: getSendProposalBySiteEmailHTML(data),
     };
   }
 }
