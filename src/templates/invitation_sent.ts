@@ -9,13 +9,7 @@ export interface InvitationSentTemplateData {
 export function getInvitationSentEmailHTML(
   data: InvitationSentTemplateData
 ): string {
-  const {
-    sponsorName,
-    studyTitle,
-    siteName,
-    sponsorMessage,
-    studyLink,
-  } = data;
+  const { sponsorName, studyTitle, siteName, sponsorMessage, studyLink } = data;
 
   return `
     <div style="font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4;">
@@ -43,7 +37,7 @@ export function getInvitationSentEmailHTML(
             ? `<div style="background-color: #f8f9fa; padding: 16px; margin: 24px 0; border-radius: 8px; border-left: 4px solid #1515D9;">
                 <p style="font-size: 14px; color: #666; margin: 0; font-style: italic; text-align: left;">
                   <strong>Message from the Sponsor:</strong><br />
-                  "${sponsorMessage}"
+                  ${sponsorMessage}
                 </p>
               </div>`
             : ""
@@ -85,4 +79,4 @@ export function getInvitationSentEmailSubject(
   data: InvitationSentTemplateData
 ): string {
   return `${data.sponsorName} Invites You to Submit a Proposal for "${data.studyTitle}" on Intune`;
-} 
+}

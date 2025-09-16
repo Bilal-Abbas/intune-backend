@@ -9,13 +9,7 @@ export interface StudyArchivedBySiteTemplateData {
 export function getStudyArchivedBySiteEmailHTML(
   data: StudyArchivedBySiteTemplateData
 ): string {
-  const {
-    siteName,
-    studyTitle,
-    sponsorName,
-    siteMessage,
-    studyLink,
-  } = data;
+  const { siteName, studyTitle, sponsorName, siteMessage, studyLink } = data;
 
   return `
     <div style="font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4;">
@@ -39,7 +33,7 @@ export function getStudyArchivedBySiteEmailHTML(
             ? `<div style="background-color: #f8f9fa; padding: 16px; margin: 24px 0; border-radius: 8px; border-left: 4px solid #1515D9;">
                 <p style="font-size: 14px; color: #666; margin: 0; font-style: italic; text-align: left;">
                   <strong>Message from the Site:</strong><br />
-                  "${siteMessage}"
+                  ${siteMessage}
                 </p>
               </div>`
             : ""

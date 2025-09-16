@@ -39,7 +39,7 @@ export function getSiteMessageToSponsorEmailHTML(
         <div style="background-color: #f8f9fa; padding: 16px; margin: 24px 0; border-radius: 8px; border-left: 4px solid #1515D9;">
           <p style="font-size: 14px; color: #666; margin: 0; font-style: italic; text-align: left;">
             <strong>Message from Site:</strong><br />
-            "${siteMessage}"
+            ${siteMessage}
           </p>
         </div>
 

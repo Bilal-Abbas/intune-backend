@@ -5,9 +5,11 @@ export interface StudyPublishedTemplateData {
   studyDescription?: string;
 }
 
-export function getStudyPublishedEmailHTML(data: StudyPublishedTemplateData): string {
+export function getStudyPublishedEmailHTML(
+  data: StudyPublishedTemplateData
+): string {
   const { studyName, studyLink, sponsorName, studyDescription } = data;
-  
+
   return `
     <div style="font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4;">
       <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); padding: 32px; text-align: center;">
@@ -50,6 +52,8 @@ export function getStudyPublishedEmailHTML(data: StudyPublishedTemplateData): st
   `;
 }
 
-export function getStudyPublishedEmailSubject(data: StudyPublishedTemplateData): string {
+export function getStudyPublishedEmailSubject(
+  data: StudyPublishedTemplateData
+): string {
   return `Study Published: ${data.studyName}`;
-} 
+}

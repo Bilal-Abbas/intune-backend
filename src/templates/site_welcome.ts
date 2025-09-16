@@ -4,9 +4,7 @@ export interface SiteWelcomeTemplateData {
   organizationName?: string;
 }
 
-export function getSiteWelcomeEmailHTML(
-  data: SiteWelcomeTemplateData
-): string {
+export function getSiteWelcomeEmailHTML(data: SiteWelcomeTemplateData): string {
   const { siteName, dashboardLink, organizationName } = data;
 
   return `

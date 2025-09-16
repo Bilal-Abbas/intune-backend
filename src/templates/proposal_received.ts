@@ -32,7 +32,7 @@ export function getProposalReceivedEmailHTML(
 
         ${
           siteMessage
-            ? `<p style="font-size: 14px; color: #666; margin-bottom: 24px; line-height: 1.5; font-style: italic; text-align: center;">"${siteMessage}"</p>`
+            ? `<p style="font-size: 14px; color: #666; margin-bottom: 24px; line-height: 1.5; font-style: italic; text-align: center;">${siteMessage}</p>`
             : ""
         }
 
