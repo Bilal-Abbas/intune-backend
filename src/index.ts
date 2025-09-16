@@ -35,8 +35,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Rate limiting
-const limiter = rateLimit({
+// Rate limiting - General API endpoints
+const generalLimiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 minutes
   max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'), // limit each IP to 100 requests per windowMs
   message: {
@@ -47,7 +47,32 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
-app.use(limiter);
+// Rate limiting - Notification endpoints (more lenient for real-time communication)
+const notificationLimiter = rateLimit({
+  windowMs: parseInt(process.env.NOTIFICATION_RATE_LIMIT_WINDOW_MS || '300000'), // 5 minutes
+  max: parseInt(process.env.NOTIFICATION_RATE_LIMIT_MAX_REQUESTS || '500'), // 500 requests per 5 minutes
+  message: {
+    error: 'Too many notification requests',
+    message: 'Please try again later'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Rate limiting - Email endpoints (moderate limits)
+const emailLimiter = rateLimit({
+  windowMs: parseInt(process.env.EMAIL_RATE_LIMIT_WINDOW_MS || '600000'), // 10 minutes
+  max: parseInt(process.env.EMAIL_RATE_LIMIT_MAX_REQUESTS || '200'), // 200 requests per 10 minutes
+  message: {
+    error: 'Too many email requests',
+    message: 'Please try again later'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Apply general rate limiting to all routes
+app.use(generalLimiter);
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
@@ -59,9 +84,9 @@ app.use((req, res, next) => {
   next();
 });
 
-// Routes
-app.use('/api/email', emailRoutes);
-app.use('/api/notifications', notificationRoutes);
+// Routes with specific rate limiting
+app.use('/api/email', emailLimiter, emailRoutes);
+app.use('/api/notifications', notificationLimiter, notificationRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
