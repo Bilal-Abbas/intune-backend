@@ -45,7 +45,7 @@ export function getProposalReceivedEmailHTML(
         </a>
 
         <p style="font-size: 14px; color: #666; margin-top: 24px;">
-          To view or respond, please log in at <a href="https://intune.bio" style="color: #1515D9;">https://intune.bio</a>.
+          To view or respond, please log in at <a href="${process.env.FRONTEND_APP_URL}" style="color: #1515D9;">${process.env.FRONTEND_APP_URL}</a>.
         </p>
 
         <p style="font-size: 12px; color: #888; margin-top: 32px;">

@@ -59,7 +59,7 @@ export function getSiteMessageToSponsorEmailHTML(
           To view or respond, please log in to your account:
         </p>
 
-        <a href="https://intune.bio" style="display: inline-block; padding: 12px 24px; background-color: #1515D9; color: #ffffff; border-radius: 8px; text-decoration: none; font-weight: bold; margin-bottom: 16px;">
+        <a href="${process.env.FRONTEND_APP_URL}" style="display: inline-block; padding: 12px 24px; background-color: #1515D9; color: #ffffff; border-radius: 8px; text-decoration: none; font-weight: bold; margin-bottom: 16px;">
           Log in to Intune
         </a>
 

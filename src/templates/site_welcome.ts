@@ -48,7 +48,7 @@ export function getSiteWelcomeEmailHTML(data: SiteWelcomeTemplateData): string {
 
         <p style="font-size: 16px; margin-bottom: 24px; text-align: left;">
           If you have any questions or need help getting started, we're here to help. Just reply to this email or visit our 
-          <a href="https://app.intune.bio/support" style="color: #1515D9; text-decoration: none;">Help & Support center</a>.
+          <a href="${process.env.FRONTEND_APP_URL}/support" style="color: #1515D9; text-decoration: none;">Help & Support center</a>.
         </p>
 
         <p style="font-size: 16px; margin-bottom: 24px; text-align: left;">
@@ -59,16 +59,6 @@ export function getSiteWelcomeEmailHTML(data: SiteWelcomeTemplateData): string {
           Warm regards,<br />
           The Intune Team
         </p>
-
-        <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 24px; text-align: center;">
-          <p style="font-size: 14px; color: #666; margin-bottom: 8px;">
-            <a href="https://app.intune.bio" style="color: #1515D9; text-decoration: none;">app.intune.bio</a>
-          </p>
-          <p style="font-size: 14px; color: #666; margin-bottom: 0;">
-            Need help? Contact us at 
-            <a href="mailto:customercare@intune.bio" style="color: #1515D9; text-decoration: none;">customercare@intune.bio</a>
-          </p>
-        </div>
 
         <p style="font-size: 12px; color: #888; margin-top: 32px;">
           2265 E Foothill Blvd, Pasadena CA, USA 91107<br />
