@@ -2,7 +2,7 @@ name: Build and Deploy to EB
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
     # Remove the paths filter to trigger on all changes
     # paths: ['backend/**', '.github/workflows/**']
 
@@ -10,7 +10,7 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }} #us-east-1
   AWS_SES_REGION: ${{ secrets.AWS_SES_REGION || 'us-east-1' }}
   # ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }} #intbio-backend
-  EB_ENVIRONMENT: ${{ secrets.EB_ENVIRONMENT }} #production  # Change this to your EB environment name
+  # EB_ENVIRONMENT will be determined dynamically based on branch
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
@@ -19,6 +19,19 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      - name: Set environment based on branch
+        id: set-env
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "environment=backend-prod" >> $GITHUB_OUTPUT
+            echo "Deploying to production environment: backend-prod"
+          elif [ "${{ github.ref_name }}" = "dev" ]; then
+            echo "environment=backend" >> $GITHUB_OUTPUT
+            echo "Deploying to development environment: backend"
+          else
+            echo "Unknown branch: ${{ github.ref_name }}"
+            exit 1
+          fi
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -60,7 +73,7 @@ jobs:
 
       - name: Deploy to Elastic Beanstalk
         env:
-          EB_ENVIRONMENT: ${{ secrets.EB_ENVIRONMENT }}
+          EB_ENVIRONMENT: ${{ steps.set-env.outputs.environment }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           APPLICATION_NAME: ${{ secrets.APPLICATION_NAME }}
           EC2_KEYNAME: ${{ secrets.EC2_KEYNAME }}
@@ -75,10 +88,15 @@ jobs:
           cat > .elasticbeanstalk/config.yml << EOF
           branch-defaults:
             main:
-              environment: $EB_ENVIRONMENT
+              environment: backend-prod
+            dev:
+              environment: backend
           environment-defaults:
             backend:
-              branch: null
+              branch: dev
+              repository: null
+            backend-prod:
+              branch: main
               repository: null
           global:
             application_name: $APPLICATION_NAME
@@ -99,5 +117,5 @@ jobs:
           echo "EB configuration created"
           cat .elasticbeanstalk/config.yml
           
-          echo "Deploying to EB..."
+          echo "Deploying to EB environment: $EB_ENVIRONMENT"
           eb deploy $EB_ENVIRONMENT 
