@@ -14,6 +14,11 @@ export const redis = new Redis(redisConfig);
 
 redis.on("error", (error: Error) => {
   console.error("Redis connection error:", error);
+
+  // Check for authentication errors
+  if (error.message.includes("NOAUTH") || error.message.includes("WRONGPASS")) {
+    console.error("Redis authentication failed. Please check your REDIS_PASSWORD environment variable.");
+  }
 });
 
 redis.on("connect", () => {
